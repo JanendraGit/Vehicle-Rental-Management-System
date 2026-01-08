@@ -19,7 +19,14 @@ public class UserMapper {
         user.setUsername(request.getUserName());
         user.setPassword(request.getPassword());
         user.setEmail(request.getEmail());
-        user.setRole(Role.USER);
+        
+        // Set role from request, default to USER if not provided or invalid
+        try {
+            user.setRole(Role.valueOf(request.getRole().toUpperCase()));
+        } catch (Exception e) {
+            user.setRole(Role.USER);
+        }
+        
         return user;
     }
 
