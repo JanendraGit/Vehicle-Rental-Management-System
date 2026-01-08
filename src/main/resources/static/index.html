@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuxeDrive | Premium Vehicle Rental</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-steering-wheel"></i> Luxe<span>Drive</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home" class="active">Home</a></li>
+                <li><a href="#how-it-works">How it Works</a></li>
+                <li><a href="#vehicles">Fleet</a></li>
+                <li><a href="#dashboard" id="dashboardLink" style="display: none;">Dashboard</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div id="authButtons">
+                    <button class="btn btn-primary btn-sm" onclick="openModal('loginModal')">Login</button>
+                    <button class="btn btn-outline text-dark btn-sm" onclick="openModal('userModal')">Sign Up</button>
+                </div>
+                <div id="userProfile" style="display: none; align-items: center; gap: 10px;">
+                    <span id="userNameDisplay" style="font-weight: 600;">User</span>
+                    <button class="btn btn-text btn-sm" onclick="logout()">Logout</button>
+                </div>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="home" class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <div class="hero-text">
+                <span class="hero-badge"><i class="fas fa-star"></i> Premium Rental Service</span>
+                <h1>Drive the <br><span class="text-gradient">Extraordinary</span></h1>
+                <p>Experience the thrill of the open road with our curated collection of luxury and sports vehicles. Unmatched comfort, performance, and style.</p>
+                <div class="hero-btns">
+                    <a href="#vehicles" class="btn btn-primary btn-lg">Find Your Car <i class="fas fa-arrow-right"></i></a>
+                    <a href="#how-it-works" class="btn btn-outline btn-lg">Learn More</a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Floating Stats -->
+        <div class="hero-stats">
+            <div class="stat-item">
+                <h3>50+</h3>
+                <p>Premium Cars</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <h3>24/7</h3>
+                <p>Support</p>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-item">
+                <h3>10k+</h3>
+                <p>Happy Clients</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="section">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-subtitle">Simple Process</span>
+                <h2>How It Works</h2>
+                <p>Rent your dream car in 3 simple steps</p>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon-wrapper">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3>1. Choose Date</h3>
+                    <p>Select your pickup and return dates to check availability.</p>
+                </div>
+                <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="step-card">
+                    <div class="step-icon-wrapper">
+                        <i class="fas fa-car-side"></i>
+                    </div>
+                    <h3>2. Choose Car</h3>
+                    <p>Browse our extensive fleet and pick the perfect vehicle.</p>
+                </div>
+                <div class="step-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="step-card">
+                    <div class="step-icon-wrapper">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3>3. Book & Go</h3>
+                    <p>Confirm your booking and get ready for the road.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Vehicles Section -->
+    <section id="vehicles" class="section bg-light">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-subtitle">Our Collection</span>
+                <h2>Explore Our Premium Fleet</h2>
+                <p>Choose from our diverse range of high-end vehicles for every occasion.</p>
+            </div>
+            
+            <!-- Filter Tabs -->
+            <div class="fleet-controls">
+                <div class="fleet-filters">
+                    <button class="filter-btn active" onclick="filterVehicles('all')">All</button>
+                    <button class="filter-btn" onclick="filterVehicles('Sedan')">Sedan</button>
+                    <button class="filter-btn" onclick="filterVehicles('SUV')">SUV</button>
+                    <button class="filter-btn" onclick="filterVehicles('Luxury')">Luxury</button>
+                    <button class="filter-btn" onclick="filterVehicles('Sports')">Sports</button>
+                </div>
+                <button class="btn btn-primary" id="addVehicleBtn" onclick="openModal('vehicleModal')" style="display: none;">
+                    <i class="fas fa-plus"></i> Add Vehicle
+                </button>
+            </div>
+            
+            <div class="vehicle-grid" id="vehicleList">
+                <!-- Vehicles injected via JS -->
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Section (Admin Only) -->
+    <section id="dashboard" class="section" style="display: none;">
+        <div class="container">
+            <div class="section-header-flex">
+                <div>
+                    <span class="section-subtitle">Overview</span>
+                    <h2>Dashboard</h2>
+                </div>
+                <div class="dashboard-actions">
+                    <button class="btn btn-outline text-dark" onclick="openModal('userModal')">
+                        <i class="fas fa-user-plus"></i> Add User
+                    </button>
+                    <button class="btn btn-primary" onclick="openModal('bookingModal')">
+                        <i class="fas fa-calendar-plus"></i> New Booking
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Stats -->
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <div class="stat-icon bg-blue-light text-blue">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalBookings">0</h3>
+                        <p>Total Bookings</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-green-light text-green">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">$0</h3>
+                        <p>Total Revenue</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-purple-light text-purple">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="activeVehicles">0</h3>
+                        <p>Fleet Size</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon bg-orange-light text-orange">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalUsers">0</h3>
+                        <p>Registered Users</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Recent Bookings -->
+                <div class="table-card booking-table-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-history text-primary"></i> Recent Bookings</h3>
+                        <button class="btn-icon-sm"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Vehicle</th>
+                                    <th>Duration</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingList">
+                                <!-- Bookings injected via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Users List -->
+                <div class="table-card user-table-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-users text-primary"></i> New Users</h3>
+                        <button class="btn-icon-sm"><i class="fas fa-ellipsis-h"></i></button>
+                    </div>
+                    <div class="user-list-container" id="userList">
+                        <!-- Users injected via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>Luxe<span>Drive</span></h3>
+                    <p>Premium vehicle rental services designed for those who appreciate quality and performance.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Company</h4>
+                    <a href="#home">About Us</a>
+                    <a href="#vehicles">Fleet</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Blog</a>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Support</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Contact Us</a>
+                </div>
+                <div class="footer-newsletter">
+                    <h4>Newsletter</h4>
+                    <p>Subscribe for latest updates and offers.</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button type="button"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 LuxeDrive Rental System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Login</h3>
+                <button class="close-modal" onclick="closeModal('loginModal')">&times;</button>
+            </div>
+            <div class="modal-form">
+                <div class="login-options" style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <button class="btn btn-primary btn-block" onclick="showLoginForm('user')">User Login</button>
+                    <button class="btn btn-dark btn-block" onclick="showLoginForm('admin')">Admin Login</button>
+                </div>
+                
+                <form id="loginForm" style="display: none;">
+                    <input type="hidden" name="role" id="loginRole">
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-text" onclick="closeModal('loginModal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="loginSubmitBtn">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Vehicle Modal -->
+    <div id="vehicleModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Add New Vehicle</h3>
+                <button class="close-modal" onclick="closeModal('vehicleModal')">&times;</button>
+            </div>
+            <form id="vehicleForm" class="modal-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Vehicle Number</label>
+                        <input type="text" name="vehicleNumber" placeholder="e.g. ABC-1234" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select name="vehicleType" required>
+                            <option value="Sedan">Sedan</option>
+                            <option value="SUV">SUV</option>
+                            <option value="Luxury">Luxury</option>
+                            <option value="Sports">Sports</option>
+                            <option value="Convertible">Convertible</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Seats</label>
+                        <input type="number" name="numberOfSeats" min="2" max="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price Per Day ($)</label>
+                        <input type="number" name="pricePerDay" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Price Per Km ($)</label>
+                        <input type="number" name="pricePerKilometer" step="0.01" required>
+                    </div>
+                    <div class="form-group full-width">
+                        <label>Image URL</label>
+                        <input type="url" name="image" placeholder="https://example.com/car.jpg">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-text" onclick="closeModal('vehicleModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Vehicle</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="userModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Register New User</h3>
+                <button class="close-modal" onclick="closeModal('userModal')">&times;</button>
+            </div>
+            <form id="userForm" class="modal-form">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" name="userName" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <div class="form-group" id="role-form-group" style="display: none;">
+                    <label>Role</label>
+                    <select name="role">
+                        <option value="USER">User</option>
+                        <option value="ADMIN">Admin</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-text" onclick="closeModal('userModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Booking Modal -->
+    <div id="bookingModal" class="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3>Create Reservation</h3>
+                <button class="close-modal" onclick="closeModal('bookingModal')">&times;</button>
+            </div>
+            <form id="bookingForm" class="modal-form">
+                <div class="form-group">
+                    <label>User Email</label>
+                    <input type="email" name="userEmail" id="bookingUserEmail" placeholder="customer@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Vehicle ID</label>
+                    <input type="number" name="vehicleId" id="bookingVehicleId" required>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" name="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" name="endDate" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Estimated Distance (Km)</label>
+                    <input type="number" name="totalKilometer" step="0.1" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-text" onclick="closeModal('bookingModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Confirm Booking</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
